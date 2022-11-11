@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GFX_3_ColorSpace", "GFX_3_ColorSpace.csproj", "{FC337D6C-5AC7-43D7-8EDE-1FC62FC77110}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC337D6C-5AC7-43D7-8EDE-1FC62FC77110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC337D6C-5AC7-43D7-8EDE-1FC62FC77110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC337D6C-5AC7-43D7-8EDE-1FC62FC77110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC337D6C-5AC7-43D7-8EDE-1FC62FC77110}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {886ABD18-62DC-4737-955E-13DDBB823A8B}
+	EndGlobalSection
+EndGlobal
