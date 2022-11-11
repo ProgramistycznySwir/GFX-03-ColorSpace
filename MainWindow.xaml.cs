@@ -34,11 +34,6 @@ public partial class MainWindow : Window
         };
         _model.UpdateBrush(Brushes.Black);
     }
-
-    //public void RGB_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    //    => _model.UpdateByRgb();
-    //public void CMYK_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)// { return; }
-    //    => _model.UpdateByCmyk();
 }
 
 public class MainWindowVM : INotifyPropertyChanged
@@ -64,8 +59,6 @@ public class MainWindowVM : INotifyPropertyChanged
     public float K { get => _K; set { _K = value; UpdateByCmyk(); } }
     float _K;
 
-    //public HSV HSV { get; set; } = new();
-
     public int H { get => _H; set { _H = value; UpdateByHsv(); } }
     int _H;
     public float S { get => _S; set { _S = value; UpdateByHsv(); } }
@@ -75,7 +68,6 @@ public class MainWindowVM : INotifyPropertyChanged
 
     MainWindowVM UpdateByRgb()
     {
-        //return this;
         (_C, _M, _Y, _K) = RGB(R, G, B).ToCmyk();
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(C)));
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(M)));
@@ -170,36 +162,21 @@ public record struct RGB(byte R, byte G, byte B)
         };
     }
 
-    //public void Deconstruct(out byte r, out byte g, out byte b)
-    //    => (r, g, b) = (R, G, B);
-
     public static implicit operator Color(RGB self)
         => Color.FromRgb(self.R, self.G, self.B);
 }
 
 public record struct CMYK(float C, float M, float Y, float K)
 {
-    public RGB ToRgb()
-    {
-        return new() {
-                R= (byte)(255 * (1-C) * (1-K)),
-                G= (byte)(255 * (1-M) * (1-K)),
-                B= (byte)(255 * (1-Y) * (1-K))
-            };
-    }
-
-    //public void Deconstruct(out float c, out float m, out float y, out float k)
-    //    => (c, m, y, k) = (C, M, Y, K);
+    public RGB ToRgb() => new(
+            R: (byte)(255 * (1 - C) * (1 - K)),
+            G: (byte)(255 * (1 - M) * (1 - K)),
+            B: (byte)(255 * (1 - Y) * (1 - K))
+        );
 }
 
 public record struct HSV(int H, float S, float V)
 {
-    ///// <summary> In range 0-360 </summary>
-    //public int H { get; set; }
-    //public float S { get; set; }
-    //public float V { get; set; }
-
-
     public RGB ToRgb()
     {
         float c = V * S;
@@ -220,10 +197,5 @@ public record struct HSV(int H, float S, float V)
                 G: (byte)((g + m) * 255),
                 B: (byte)((b + m) * 255)
             );
-        //return new() {
-        //        R = (byte)(255 * (1 - C) * (1 - K)),
-        //        G = (byte)(255 * (1 - M) * (1 - K)),
-        //        B = (byte)(255 * (1 - Y) * (1 - K))
-        //    };
     }
 }
