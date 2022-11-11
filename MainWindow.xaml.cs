@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using static System.MathF;
+
 namespace GFX_3_ColorSpace;
 
 /// <summary>
@@ -64,11 +66,11 @@ public class MainWindowVM : INotifyPropertyChanged
 
     //public HSV HSV { get; set; } = new();
 
-    public float H { get => _H; set { _H = value; UpdateByCmyk(); } }
-    float _H;
-    public float S { get => _S; set { _S = value; UpdateByCmyk(); } }
+    public int H { get => _H; set { _H = value; UpdateByHsv(); } }
+    int _H;
+    public float S { get => _S; set { _S = value; UpdateByHsv(); } }
     float _S;
-    public float V { get => _V; set { _V = value; UpdateByCmyk(); } }
+    public float V { get => _V; set { _V = value; UpdateByHsv(); } }
     float _V;
 
     MainWindowVM UpdateByRgb()
@@ -105,19 +107,22 @@ public class MainWindowVM : INotifyPropertyChanged
         return this;
     }
 
-    //MainWindowVM UpdateByHsv()
-    //{
-    //    (_R, _G, _B) = HSV(C, M, Y, K).ToRgb();
-    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(R)));
-    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(G)));
-    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(B)));
+    MainWindowVM UpdateByHsv()
+    {
+        (_R, _G, _B) = HSV(H, S, V).ToRgb();
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(R)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(G)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(B)));
 
-    //    HSV = CMYK(C, M, Y, K).ToRgb().ToHsv();
-    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(HSV)));
+        (_C, _M, _Y, _K) = HSV(H, S, V).ToRgb().ToCmyk();
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(C)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(M)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(Y)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(K)));
 
-    //    SetColor(RGB(R, G, B));
-    //    return this;
-    //}
+        SetColor(RGB(R, G, B));
+        return this;
+    }
 
     public static RGB RGB(byte r, byte g, byte b) => new(r, g, b);
     public static CMYK CMYK(float c, float m, float y, float k) => new(c, m, y, k);
@@ -174,7 +179,6 @@ public record struct RGB(byte R, byte G, byte B)
 
 public record struct CMYK(float C, float M, float Y, float K)
 {
-
     public RGB ToRgb()
     {
         return new() {
@@ -194,4 +198,32 @@ public record struct HSV(int H, float S, float V)
     //public int H { get; set; }
     //public float S { get; set; }
     //public float V { get; set; }
+
+
+    public RGB ToRgb()
+    {
+        float c = V * S;
+        float x = c * (1 - Abs(((H / 60f) % 2) - 1));
+        float m = V - c;
+
+        (float r, float g, float b) =
+              H < 60  ? (c,  x,  0f)
+            : H < 120 ? (x,  c,  0f)
+            : H < 180 ? (0f, c,  x)
+            : H < 240 ? (0f, x,  c)
+            : H < 300 ? (x,  0f, c)
+            : H < 360 ? (c,  0f, x)
+            : throw new InvalidOperationException();
+
+        return new(
+                R: (byte)((r + m) * 255),
+                G: (byte)((g + m) * 255),
+                B: (byte)((b + m) * 255)
+            );
+        //return new() {
+        //        R = (byte)(255 * (1 - C) * (1 - K)),
+        //        G = (byte)(255 * (1 - M) * (1 - K)),
+        //        B = (byte)(255 * (1 - Y) * (1 - K))
+        //    };
+    }
 }

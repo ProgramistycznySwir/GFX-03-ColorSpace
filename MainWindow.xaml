@@ -82,21 +82,21 @@
                                 <Border BorderThickness="1" BorderBrush="Gray" Margin="10,0,0,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="H:" HorizontalContentAlignment="Right" Width="25"/>
-                                        <TextBlock Text="{Binding ElementName=slider_H, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" Width="30" />
+                                        <TextBox Text="{Binding ElementName=slider_H, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" Width="30" />
                                         <Slider Name="slider_H" Value="{Binding Path=H, Mode=TwoWay}" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="359" Width="400"/>
                                     </StackPanel>
                                 </Border>
                                 <Border BorderThickness="1" BorderBrush="Gray" Margin="10,0,0,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="S:" HorizontalContentAlignment="Right" Width="25"/>
-                                        <TextBlock Text="{Binding ElementName=slider_S, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" Width="30" />
+                                        <TextBox Text="{Binding ElementName=slider_S, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" Width="30" />
                                         <Slider Name="slider_S" Value="{Binding Path=S, Mode=TwoWay}" Maximum="1" Width="400"/>
                                     </StackPanel>
                                 </Border>
                                 <Border BorderThickness="1" BorderBrush="Gray" Margin="10,0,0,0">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="V:" HorizontalContentAlignment="Right" Width="25"/>
-                                        <TextBlock Text="{Binding ElementName=slider_V, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" Width="30" />
+                                        <TextBox Text="{Binding ElementName=slider_V, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right" Width="30" />
                                         <Slider Name="slider_V" Value="{Binding Path=V, Mode=TwoWay}" Maximum="1" Width="400"/>
                                     </StackPanel>
                                 </Border>
