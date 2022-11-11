@@ -48,82 +48,84 @@ public class MainWindowVM : INotifyPropertyChanged
 
     public byte R { get => _R; set { _R = value; UpdateByRgb(); } }
     byte _R;
-    //public byte G { get; set; }
     public byte G { get => _G; set { _G = value; UpdateByRgb(); } }
     byte _G;
-    //public byte B { get; set; }
     public byte B { get => _B; set { _B = value; UpdateByRgb(); } }
     byte _B;
 
-    //public CMYK CMYK { get; set; } = new();
     public float C { get => _C; set { _C = value; UpdateByCmyk(); } }
     float _C;
-    //public float M { get; set; }
     public float M { get => _M; set { _M = value; UpdateByCmyk(); } }
     float _M;
-    //public float Y { get; set; }
     public float Y { get => _Y; set { _Y = value; UpdateByCmyk(); } }
     float _Y;
-    //public float K { get; set; }
     public float K { get => _K; set { _K = value; UpdateByCmyk(); } }
     float _K;
 
-    public HSV HSV { get; set; } = new();
+    //public HSV HSV { get; set; } = new();
 
-    public MainWindowVM UpdateByRgb()
+    public float H { get => _H; set { _H = value; UpdateByCmyk(); } }
+    float _H;
+    public float S { get => _S; set { _S = value; UpdateByCmyk(); } }
+    float _S;
+    public float V { get => _V; set { _V = value; UpdateByCmyk(); } }
+    float _V;
+
+    MainWindowVM UpdateByRgb()
     {
-        return this;
+        //return this;
         (_C, _M, _Y, _K) = RGB(R, G, B).ToCmyk();
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(C)));
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(M)));
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(Y)));
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(K)));
 
-        HSV = RGB(R, G, B).ToHsv();
-        PropertyChanged(this, new PropertyChangedEventArgs(nameof(HSV)));
+        (_H, _S, _V) = RGB(R, G, B).ToHsv();
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(H)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(S)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(V)));
 
         SetColor(RGB(R, G, B));
         return this;
     }
 
-    internal MainWindowVM UpdateByCmyk()
+    MainWindowVM UpdateByCmyk()
     {
         (_R, _G, _B) = CMYK(C, M, Y, K).ToRgb();
-        //RGB = CMYK.ToRgb();
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(R)));
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(G)));
         PropertyChanged(this, new PropertyChangedEventArgs(nameof(B)));
 
-        HSV = CMYK(C, M, Y, K).ToRgb().ToHsv();
-        PropertyChanged(this, new PropertyChangedEventArgs(nameof(HSV)));
+        (_H, _S, _V) = CMYK(C, M, Y, K).ToRgb().ToHsv();
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(H)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(S)));
+        PropertyChanged(this, new PropertyChangedEventArgs(nameof(V)));
 
         SetColor(RGB(R, G, B));
         return this;
     }
 
+    //MainWindowVM UpdateByHsv()
+    //{
+    //    (_R, _G, _B) = HSV(C, M, Y, K).ToRgb();
+    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(R)));
+    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(G)));
+    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(B)));
+
+    //    HSV = CMYK(C, M, Y, K).ToRgb().ToHsv();
+    //    PropertyChanged(this, new PropertyChangedEventArgs(nameof(HSV)));
+
+    //    SetColor(RGB(R, G, B));
+    //    return this;
+    //}
+
     public static RGB RGB(byte r, byte g, byte b) => new(r, g, b);
     public static CMYK CMYK(float c, float m, float y, float k) => new(c, m, y, k);
+    public static HSV HSV(int h, float s, float v) => new(h, s, v);
 }
 
 public record struct RGB(byte R, byte G, byte B)
 {
-    //public Action Updated { get; init; }
-
-    //public byte R { get => _r; set { _r = value; Updated(); } }
-    //byte _r;
-    //public byte G { get => _g; set { _g = value; Updated(); } }
-    //byte _g;
-    //public byte B { get => _b; set { _b = value; Updated(); } }
-    //byte _b;
-
-    //public RGB Set(RGB value)
-    //{
-    //    _r = value.R;
-    //    _g = value.G;
-    //    _b = value.B;
-    //    return this;
-    //}
-
     public CMYK ToCmyk()
     {
         float r = R / 255f;
@@ -163,21 +165,15 @@ public record struct RGB(byte R, byte G, byte B)
         };
     }
 
-    public void Deconstruct(out byte r, out byte g, out byte b)
-        => (r, g, b) = (R, G, B);
+    //public void Deconstruct(out byte r, out byte g, out byte b)
+    //    => (r, g, b) = (R, G, B);
 
     public static implicit operator Color(RGB self)
         => Color.FromRgb(self.R, self.G, self.B);
-    //public static implicit operator RGB((byte r, byte g, byte b) self)
-    //    => new(self.r, self.g, self.b);
 }
 
 public record struct CMYK(float C, float M, float Y, float K)
 {
-    //public float C { get; set; }
-    //public float M { get; set; }
-    //public float Y { get; set; }
-    //public float K { get; set; }
 
     public RGB ToRgb()
     {
@@ -188,14 +184,14 @@ public record struct CMYK(float C, float M, float Y, float K)
             };
     }
 
-    public void Deconstruct(out float c, out float m, out float y, out float k)
-        => (c, m, y, k) = (C, M, Y, K);
+    //public void Deconstruct(out float c, out float m, out float y, out float k)
+    //    => (c, m, y, k) = (C, M, Y, K);
 }
 
-public class HSV
+public record struct HSV(int H, float S, float V)
 {
-    /// <summary> In range 0-360 </summary>
-    public int H { get; set; }
-    public float S { get; set; }
-    public float V { get; set; }
+    ///// <summary> In range 0-360 </summary>
+    //public int H { get; set; }
+    //public float S { get; set; }
+    //public float V { get; set; }
 }
